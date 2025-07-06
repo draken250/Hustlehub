@@ -1,1 +1,0 @@
-export { PopularActivitiesSection } from "./PopularActivitiesSection";

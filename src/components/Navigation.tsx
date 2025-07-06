@@ -7,16 +7,18 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "./ui/navigation-menu";
+import { NavLink } from "react-router-dom";
 
 export const Navigation = (): JSX.Element => {
   const navItems = [
-    { label: "Home", isActive: true },
-    { label: "Explore", isActive: false },
-    { label: "Experience", isActive: false },
+    { label: "Home", to: "/" },
+    { label: "Leaderboard", to: "/leaderboard" },
+    { label: "Loyalty Cards", to: "/loyalty-cards" },
+    { label: "Businesses", to: "/businesses" },
   ];
 
   return (
-    <header className="w-full h-[82px] bg-white relative flex items-center justify-between px-11 border-b shadow-sm">
+    <header className="w-full h-[82px]   relative flex items-center justify-between px-11 border-b shadow-sm">
       {/* Brand logo */}
       <div className="font-extrabold text-[#1c09ed] text-lg font-['Inter',Helvetica]">
         Hustlehub
@@ -27,13 +29,16 @@ export const Navigation = (): JSX.Element => {
         <NavigationMenuList className="flex gap-8">
           {navItems.map((item, index) => (
             <NavigationMenuItem key={index}>
-              <NavigationMenuLink
-                className={`font-['Inter',Helvetica] font-medium text-sm cursor-pointer hover:text-[#1c09ed] transition-colors ${
-                  item.isActive ? "text-[#1c09ed]" : "text-black"
-                }`}
+              <NavLink
+                to={item.to}
+                className={({ isActive }) =>
+                  `font-['Inter',Helvetica] font-medium text-sm cursor-pointer hover:text-[#1c09ed] transition-colors ${
+                    isActive ? "text-[#1c09ed]" : "text-black"
+                  }`
+                }
               >
                 {item.label}
-              </NavigationMenuLink>
+              </NavLink>
             </NavigationMenuItem>
           ))}
         </NavigationMenuList>
@@ -42,17 +47,17 @@ export const Navigation = (): JSX.Element => {
       {/* Right side controls */}
       <div className="flex items-center gap-6">
         {/* Language selector */}
-        <div className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
+        <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
           <span className="font-['Inter',Helvetica] font-medium text-black text-sm">
             En
           </span>
-          <GlobeIcon className="w-[27px] h-[27px]" />
+          <GlobeIcon size={20} />
         </div>
 
         {/* Login button */}
         <Button
           variant="outline"
-          className="w-[101px] h-[37px] rounded-[40px] border border-solid border-black bg-white font-['Inter',Helvetica] font-medium text-sm relative hover:bg-gray-50 transition-colors"
+          className="w-[101px] h-[37px] rounded-[40px] border border-solid border-[#1c09ed] bg-white font-['Inter',Helvetica] font-medium text-sm relative hover:bg-gray-50 transition-colors"
         >
           <span className="absolute left-[18px]">Login</span>
           <div className="absolute w-[26px] h-[26px] top-1 left-[62px] bg-white rounded-[50px] border border-solid border-black" />

@@ -8,10 +8,10 @@ export const NotificationStrip = (): JSX.Element => {
   if (!isVisible) return <></>;
 
   return (
-    <div className="w-full h-10 bg-[#eeeeee] relative flex items-center justify-center">
+    <div className="w-full h-10  relative flex items-center justify-center">
       <div className="font-sans text-xs text-black">
         <span className="font-medium">For customer service, </span>
-        <span className="font-bold">Please ask support assistance</span>
+        <span className="font-bold"> <u>Please ask support assistance</u></span>
       </div>
       <Button
         variant="ghost"
