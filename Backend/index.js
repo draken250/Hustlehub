@@ -40,3 +40,8 @@ app.use("/login", loginRoute);
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
+
+
+app.get("/test", (req, res) => {
+  res.send("API is working");
+});
