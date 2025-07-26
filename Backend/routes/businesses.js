@@ -1,18 +1,40 @@
 const express = require("express");
 const router = express.Router();
 const Business = require("../models/Business");
+const jwt = require("jsonwebtoken");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // POST /businesses - create new business (vendors only)
 router.post("/", authMiddleware, async (req, res) => {
   try {
-    if (!req.user.is_provider) {
-      return res.status(403).json({ error: "Only vendors can create a business" });
+    // if (!req.user.is_provider) {
+    //   return res.status(403).json({ error: "Only vendors can create a business" });
+    // }
+
+    const existingBusiness = await Business.findOne({ owner_id: req.user._id });
+
+    if (existingBusiness) {
+      return res.status(400).json({
+        error: "You already have a registered business",
+        business_id: existingBusiness._id,
+      });
     }
+
+    const payload = {
+      _id: req.user._id,
+      email: req.user.email,
+      is_provider: true,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 2,
+    };
+
+    const token = jwt.sign(payload, process.env.SECRET_KEY);
+    console.log("Token created:", token);
 
     const { name, description, category_id, whatsapp } = req.body;
     if (!name || !category_id || !whatsapp) {
-      return res.status(400).json({ error: "Name, category_id, and whatsapp are required" });
+      return res
+        .status(400)
+        .json({ error: "Name, category_id, and whatsapp are required" });
     }
 
     const business = new Business({
@@ -26,6 +48,7 @@ router.post("/", authMiddleware, async (req, res) => {
     await business.save();
 
     return res.status(201).json({
+      token,
       message: "Business created",
       business_id: business._id,
       whatsapp: business.whatsapp,
@@ -41,9 +64,14 @@ router.put("/:businessId", authMiddleware, async (req, res) => {
   const { businessId } = req.params;
 
   try {
-    const business = await Business.findOne({ _id: businessId, owner_id: req.user._id });
+    const business = await Business.findOne({
+      _id: businessId,
+      owner_id: req.user._id,
+    });
     if (!business) {
-      return res.status(404).json({ error: "Business not found or not owned by user" });
+      return res
+        .status(404)
+        .json({ error: "Business not found or not owned by user" });
     }
 
     const { name, description, category_id } = req.body;
@@ -92,7 +120,7 @@ router.get("/", async (req, res) => {
   try {
     const businesses = await Business.find();
 
-    const response = businesses.map(b => ({
+    const response = businesses.map((b) => ({
       id: b._id,
       name: b.name,
       description: b.description,
@@ -114,10 +142,15 @@ router.delete("/:businessId", authMiddleware, async (req, res) => {
   const { businessId } = req.params;
 
   try {
-    const business = await Business.findOne({ _id: businessId, owner_id: req.user._id });
+    const business = await Business.findOne({
+      _id: businessId,
+      owner_id: req.user._id,
+    });
 
     if (!business) {
-      return res.status(404).json({ error: "Business not found or not owned by user" });
+      return res
+        .status(404)
+        .json({ error: "Business not found or not owned by user" });
     }
 
     await business.deleteOne();

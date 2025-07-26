@@ -25,8 +25,9 @@ router.post("/", async (req, res) => {
     console.log("isMatch:", isMatch);
 
     const payload = {
-      user_id: user._id,
+      _id: user._id,
       email: user.email,
+      is_provider: user.is_provider,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 2,
     };
 

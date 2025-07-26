@@ -5,6 +5,9 @@ const User = require("./models/User");
 require("dotenv").config();
 const registerRoute = require("./routes/register");
 const loginRoute = require("./routes/login");
+const categoriesRoute = require("./routes/categories")
+const userBecomeVendorRoute = require("./routes/user")
+const BusinessesRoute = require("./routes/businesses")
 
 const app = express();
 const PORT = 5000;
@@ -36,6 +39,9 @@ app.get("/", (req, res) => {
 // Register route
 app.use("/register", registerRoute);
 app.use("/login", loginRoute);
+app.use("/categories", categoriesRoute);
+app.use("/user", userBecomeVendorRoute);
+app.use("/businesses", BusinessesRoute);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);

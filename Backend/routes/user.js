@@ -4,11 +4,13 @@ const User = require("../models/User");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // PUT /user/become-vendor
-router.put("/user/become-vendor", authMiddleware, async (req, res) => {
+router.put("/become-vendor", authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    console.log("Decoded user from token:", req.user); // ✅ see what’s inside the token
 
+    const user = await User.findById(req.user._id);
     if (!user) {
+      console.log("User not found for ID:", req.user._id); // 🧪 debug
       return res.status(404).json({ error: "User not found" });
     }
 
@@ -19,11 +21,12 @@ router.put("/user/become-vendor", authMiddleware, async (req, res) => {
     user.is_provider = true;
     await user.save();
 
-    res.json({ message: "You are now a vendor", is_provider: true });
+    return res.status(200).json({ message: "You are now a vendor", is_provider: true });
   } catch (err) {
     console.error("Error updating user:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 module.exports = router;
