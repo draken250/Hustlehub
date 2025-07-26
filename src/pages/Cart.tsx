@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigation } from "../components/Navigation";
 import { useCart } from '../CartContext';
-import { featuredStores } from './Shop'; // Import the vendor/shop data
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 interface CartItem {
   id: string;
@@ -11,26 +12,26 @@ interface CartItem {
   color?: string;
   size?: string;
   quantity: number;
+  vendorId?: number;
 }
 
 interface Vendor {
-  id: number;
-  title: string;
+  id: string;
+  name: string;
   whatsapp: string;
-  // ...other fields
 }
 
-// Helper to get vendor by product or vendor id
+// Helper to get vendor by product id
 function getVendorByProduct(cart: CartItem[]): Vendor | undefined {
   if (!cart.length) return undefined;
-  const productId = parseInt(cart[0].id, 10);
-  let vendorId = 1;
-  if (productId >= 1 && productId <= 4) vendorId = 1;
-  else if (productId >= 5 && productId <= 8) vendorId = 2;
-  else if (productId >= 9 && productId <= 12) vendorId = 3;
-  else if (productId >= 13 && productId <= 16) vendorId = 4;
-  else vendorId = 5;
-  return featuredStores.find((v) => v.id === vendorId);
+  
+  // For now, return a default vendor since we don't have vendor info in cart items
+  // In a real implementation, you would fetch vendor info based on the product's vendor_id
+  return {
+    id: "1",
+    name: "Default Store",
+    whatsapp: "+250788123456" // Default WhatsApp number
+  };
 }
 
 const CartItems = () => {
@@ -49,10 +50,21 @@ const CartItems = () => {
       <ul className="divide-y divide-gray-200">
         {cart.map((item, idx) => (
           <li key={idx} className="py-4 flex items-center gap-4">
-            <img src={item.image} alt={item.title} className="w-16 h-16 rounded object-cover border" />
+            <img 
+              src={item.image || "https://via.placeholder.com/64x64?text=Product"} 
+              alt={item.title} 
+              className="w-16 h-16 rounded object-cover border"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://via.placeholder.com/64x64?text=Product';
+              }}
+            />
             <div className="flex-1">
               <div className="font-semibold">{item.title}</div>
-              <div className="text-sm text-gray-500">Color: {item.color} | Size: {item.size}</div>
+              <div className="text-sm text-gray-500">
+                {item.color && `Color: ${item.color}`}
+                {item.color && item.size && " | "}
+                {item.size && `Size: ${item.size}`}
+              </div>
               <div className="text-sm">Qty: {item.quantity}</div>
               <div className="text-blue-600 font-bold">RWF{item.price.toLocaleString()}</div>
             </div>
@@ -92,6 +104,7 @@ const OrderSummary = () => {
 const PaymentMethod = () => {
   const { cart } = useCart();
   const vendor = getVendorByProduct(cart);
+  
   const handleCheckout = () => {
     if (!vendor) return;
     const orderLines = cart.map(item =>
@@ -102,6 +115,7 @@ const PaymentMethod = () => {
     const whatsappUrl = `https://wa.me/${vendor.whatsapp.replace(/[^\d]/g, '')}?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };
+  
   return (
     <div className="bg-white rounded-xl shadow p-4">
       <h2 className="font-semibold mb-2">Payment Method</h2>

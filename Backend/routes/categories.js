@@ -21,6 +21,24 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /categories/:id
+router.get("/:id", async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id);
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    return res.json({
+      id: category._id,
+      name: category.name,
+    });
+  } catch (err) {
+    console.error("Error fetching category:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
 // POST /categories
 router.post("/", authMiddleware, async (req, res) => {
     const { name } = req.body;

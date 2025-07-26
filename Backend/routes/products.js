@@ -111,6 +111,10 @@ router.get("/", async (req, res) => {
         category_id: p.category_id,
         business_id: p.business_id,
         vendor_id: p.vendor_id,
+        image: p.image,
+        stock: p.stock,
+        colors: p.colors,
+        sizes: p.sizes,
       }));
   
       res.json(response);
@@ -150,6 +154,35 @@ router.delete("/:id", authMiddleware, async (req, res) => {
   } catch (err) {
     console.error("Error deleting product:", err);
     return res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET /products/:id - Get a single product by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const response = {
+      id: product._id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      category_id: product.category_id,
+      business_id: product.business_id,
+      vendor_id: product.vendor_id,
+      image: product.image,
+      stock: product.stock,
+      colors: product.colors,
+      sizes: product.sizes,
+    };
+
+    res.json(response);
+  } catch (err) {
+    console.error("Error fetching product:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

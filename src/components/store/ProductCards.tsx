@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Heart, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -13,6 +14,7 @@ interface Product {
   stock: number;
   colors: string[];
   sizes: string[];
+  category?: string; // Added category name
 }
 
 interface ProductCardProps {
@@ -66,7 +68,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onFavoriteToggle, on
             <span>4.5</span>
           </div>
         </div>
-        <p className="text-sm text-gray-500 mb-1 line-clamp-1">{product.description}</p>
+        <p className="text-sm text-gray-500 mb-1 line-clamp-1">{product.category || 'Uncategorized'}</p>
         <div className="flex justify-between items-center">
           <p className="font-semibold text-gray-900">RWF{product.price.toLocaleString()}</p>
           <button 
@@ -91,8 +93,33 @@ const ProductCards = () => {
         const response = await fetch('http://localhost:5000/products');
         if (response.ok) {
           const data = await response.json();
-          // Take the first 8 products (you can implement popularity logic later)
-          setProducts(data.slice(0, 8));
+          
+          // Get category names for products
+          const productsWithCategories = await Promise.all(
+            data.slice(0, 8).map(async (product: Product) => {
+              try {
+                const categoryResponse = await fetch(`http://localhost:5000/categories/${product.category_id}`);
+                if (categoryResponse.ok) {
+                  const category = await categoryResponse.json();
+                  return {
+                    ...product,
+                    category: category.name
+                  };
+                }
+                return {
+                  ...product,
+                  category: 'Uncategorized'
+                };
+              } catch (err) {
+                return {
+                  ...product,
+                  category: 'Uncategorized'
+                };
+              }
+            })
+          );
+          
+          setProducts(productsWithCategories);
         }
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -154,13 +181,13 @@ const ProductCards = () => {
       
       <div className="flex gap-8 md:flex-wrap overflow-x-auto no-scrollbar">
         {products.map((product) => (
-          <div key={product.id} className="cursor-pointer"> 
+          <Link key={product.id} to={`/product/${product.id}`} className="cursor-pointer"> 
             <ProductCard 
               product={product} 
               onFavoriteToggle={handleFavoriteToggle}
               onAddToCart={handleAddToCart}
             /> 
-          </div>
+          </Link>
         ))}
       </div>
     </section>
