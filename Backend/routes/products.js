@@ -8,7 +8,7 @@ require("dotenv").config();
 
 // POST /products
 router.post("/", authMiddleware, async (req, res) => {
-  const { name, description, price, category_id, business_id } = req.body;
+  const { name, description, price, category_id, business_id, image, stock, colors, sizes } = req.body;
   console.log("Product creation attempt by:", req.user.email);
 
   try {
@@ -30,13 +30,29 @@ router.post("/", authMiddleware, async (req, res) => {
       category_id,
       business_id,
       vendor_id: req.user._id,
+      image,
+      stock,
+      colors,
+      sizes,
     });
 
     await newProduct.save();
 
     return res.status(201).json({
       message: "Product created successfully",
-      product_id: newProduct._id,
+      product: {
+        id: newProduct._id,
+        name: newProduct.name,
+        description: newProduct.description,
+        price: newProduct.price,
+        category_id: newProduct.category_id,
+        business_id: newProduct.business_id,
+        vendor_id: newProduct.vendor_id,
+        image: newProduct.image,
+        stock: newProduct.stock,
+        colors: newProduct.colors,
+        sizes: newProduct.sizes,
+      },
     });
   } catch (err) {
     console.error("Error creating product:", err);
@@ -105,4 +121,68 @@ router.get("/", async (req, res) => {
   });
   
   module.exports = router;
+
+// DELETE /products/:id
+router.delete("/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  console.log("Product deletion attempt by:", req.user.email);
+
+  try {
+    // Only vendors can delete products
+    if (!req.user.is_provider) {
+      return res.status(403).json({ error: "Only vendors can delete products" });
+    }
+
+    // Find the product and check if it belongs to the current vendor
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Check if the product belongs to the current vendor
+    if (product.vendor_id.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: "You can only delete your own products" });
+    }
+
+    await Product.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Product deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting product:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET /products/vendor - Get products for the current vendor
+router.get("/vendor", authMiddleware, async (req, res) => {
+  try {
+    // Only vendors can access this endpoint
+    if (!req.user.is_provider) {
+      return res.status(403).json({ error: "Only vendors can access this endpoint" });
+    }
+
+    const products = await Product.find({ vendor_id: req.user._id });
+
+    const response = products.map((p) => ({
+      id: p._id,
+      name: p.name,
+      description: p.description,
+      price: p.price,
+      category_id: p.category_id,
+      business_id: p.business_id,
+      vendor_id: p.vendor_id,
+      image: p.image,
+      stock: p.stock,
+      colors: p.colors,
+      sizes: p.sizes,
+    }));
+
+    res.json(response);
+  } catch (err) {
+    console.error("Error fetching vendor products:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+module.exports = router;
   

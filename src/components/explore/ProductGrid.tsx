@@ -212,7 +212,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onFavoriteToggle }) 
         </div>
         <p className="text-sm text-gray-500 mb-1">{product.location}</p>
         <div className="flex justify-between items-center">
-          <p className="font-semibold text-gray-900">${product.price.toFixed(2)}</p>
+          <p className="font-semibold text-gray-900">RWF{product.price.toFixed(2)}</p>
           <button className="text-xs bg-indigo-50 text-indigo-600 px-3 py-2 rounded-full hover:bg-indigo-100 transition-colors">
             Add to Cart
           </button>

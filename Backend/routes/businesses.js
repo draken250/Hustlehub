@@ -74,11 +74,12 @@ router.put("/:businessId", authMiddleware, async (req, res) => {
         .json({ error: "Business not found or not owned by user" });
     }
 
-    const { name, description, category_id } = req.body;
+    const { name, description, category_id, logo } = req.body;
 
     if (name) business.name = name;
     if (description) business.description = description;
     if (category_id) business.category_id = category_id;
+    if (logo) business.logo = logo;
 
     await business.save();
 
@@ -107,6 +108,7 @@ router.get("/:businessId", async (req, res) => {
       category_id: business.category_id,
       owner_id: business.owner_id,
       whatsapp: business.whatsapp,
+      logo: business.logo,
       created_at: business.createdAt, // assuming createdAt field
     });
   } catch (err) {
@@ -127,6 +129,7 @@ router.get("/", async (req, res) => {
       category_id: b.category_id,
       owner_id: b.owner_id,
       whatsapp: b.whatsapp,
+      logo: b.logo,
       created_at: b.createdAt,
     }));
 

@@ -8,6 +8,8 @@ const loginRoute = require("./routes/login");
 const categoriesRoute = require("./routes/categories")
 const userBecomeVendorRoute = require("./routes/user")
 const BusinessesRoute = require("./routes/businesses")
+const productsRoute = require("./routes/products");
+const loyaltyRoute = require("./routes/loyalty");
 
 const app = express();
 const PORT = 5000;
@@ -42,6 +44,8 @@ app.use("/login", loginRoute);
 app.use("/categories", categoriesRoute);
 app.use("/user", userBecomeVendorRoute);
 app.use("/businesses", BusinessesRoute);
+app.use("/products", productsRoute);
+app.use("/loyalty-cards", loyaltyRoute);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);

@@ -54,7 +54,7 @@ const CartItems = () => {
               <div className="font-semibold">{item.title}</div>
               <div className="text-sm text-gray-500">Color: {item.color} | Size: {item.size}</div>
               <div className="text-sm">Qty: {item.quantity}</div>
-              <div className="text-blue-600 font-bold">Rwf{item.price.toLocaleString()}</div>
+              <div className="text-blue-600 font-bold">RWF{item.price.toLocaleString()}</div>
             </div>
             <button className="text-red-500 hover:underline text-sm" onClick={() => removeFromCart(item.id)}>Remove</button>
           </li>
@@ -81,10 +81,10 @@ const OrderSummary = () => {
   return (
     <div className="bg-white rounded-xl shadow p-4 mb-4">
       <h2 className="font-semibold mb-2">Order Summary</h2>
-      <div className="flex justify-between text-sm mb-1"><span>Subtotal</span><span>Rwf{subtotal.toLocaleString()}</span></div>
-      <div className="flex justify-between text-sm mb-1"><span>Delivery</span><span>Rwf{delivery.toLocaleString()}</span></div>
-      <div className="flex justify-between text-sm mb-1"><span>Tax</span><span>Rwf{tax.toLocaleString()}</span></div>
-      <div className="flex justify-between font-bold text-lg mt-2"><span>Total</span><span>Rwf{total.toLocaleString()}</span></div>
+      <div className="flex justify-between text-sm mb-1"><span>Subtotal</span><span>RWF{subtotal.toLocaleString()}</span></div>
+      <div className="flex justify-between text-sm mb-1"><span>Delivery</span><span>RWF{delivery.toLocaleString()}</span></div>
+      <div className="flex justify-between text-sm mb-1"><span>Tax</span><span>RWF{tax.toLocaleString()}</span></div>
+      <div className="flex justify-between font-bold text-lg mt-2"><span>Total</span><span>RWF{total.toLocaleString()}</span></div>
     </div>
   );
 };
@@ -95,10 +95,10 @@ const PaymentMethod = () => {
   const handleCheckout = () => {
     if (!vendor) return;
     const orderLines = cart.map(item =>
-      `- ${item.title} (Qty: ${item.quantity}${item.color ? ", Color: " + item.color : ""}${item.size ? ", Size: " + item.size : ""}) - Rwf${item.price * item.quantity}`
+      `- ${item.title} (Qty: ${item.quantity}${item.color ? ", Color: " + item.color : ""}${item.size ? ", Size: " + item.size : ""}) - RWF${item.price * item.quantity}`
     ).join("%0A");
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0) + (cart.length > 0 ? 2999 : 0) + (cart.length > 0 ? 3999 : 0);
-    const message = `Hello, I want to order:%0A${orderLines}%0A%0ATotal: Rwf${total.toLocaleString()}`;
+    const message = `Hello, I want to order:%0A${orderLines}%0A%0ATotal: RWF${total.toLocaleString()}`;
     const whatsappUrl = `https://wa.me/${vendor.whatsapp.replace(/[^\d]/g, '')}?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };

@@ -35,7 +35,7 @@ const TrendingProducts: React.FC = () => (
           <div className="flex items-center gap-1 text-xs text-yellow-500 mb-1">
             <span>★</span> {product.rating} ({product.reviews})
           </div>
-          <div className="text-base font-bold text-blue-600">${product.price}</div>
+          <div className="text-base font-bold text-blue-600">RWF{product.price}</div>
         </div>
       ))}
     </div>

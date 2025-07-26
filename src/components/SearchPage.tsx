@@ -31,7 +31,7 @@ const SearchPage: React.FC = () => {
           <div key={product.id} className="mb-2 p-2 border rounded">
             <div className="font-bold">{product.name}</div>
             <div>{product.description}</div>
-            <div>{typeof product.price === 'number' ? `$${product.price}` : ''}</div>
+            <div>{typeof product.price === 'number' ? `RWF${product.price}` : ''}</div>
           </div>
         ))}
         {results.length === 0 && !loading && <div>No results found.</div>}

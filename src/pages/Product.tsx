@@ -141,20 +141,18 @@ const Product = () => {
               </div>
 
               {/* Price Section */}
-              <div className="mb-6">
-                <div className="flex items-baseline gap-3 mb-2">
-                  <span className="text-3xl font-bold text-gray-900">
-                    Rwf{product.price.toLocaleString()}
-                  </span>
-                  <span className="text-lg text-gray-400 line-through">
-                    Rwf{product.originalPrice.toLocaleString()}
-                  </span>
-                  <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-sm font-medium">
-                    {discountPercentage}% OFF
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600">Free shipping on orders over Rwf 50,000</p>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-2xl font-bold text-blue-600">
+                  RWF{product.price.toLocaleString()}
+                </span>
+                <span className="text-lg text-gray-500 line-through">
+                  RWF{product.originalPrice.toLocaleString()}
+                </span>
+                <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-sm font-medium">
+                  {discountPercentage}% OFF
+                </span>
               </div>
+              <p className="text-sm text-gray-600">Free shipping on orders over RWF 50,000</p>
 
               {/* Color Selection */}
               <div className="mb-6">
@@ -335,7 +333,7 @@ const Product = () => {
                       <div key={i} className="group cursor-pointer">
                         <div className="aspect-square bg-gray-100 rounded-lg mb-3 group-hover:shadow-md transition-shadow"></div>
                         <div className="font-semibold text-gray-900">Styling Idea {i}</div>
-                        <div className="text-sm text-gray-600">Rwf{(220000 * i).toLocaleString()}</div>
+                        <div className="text-sm text-gray-600">RWF{(220000 * i).toLocaleString()}</div>
                       </div>
                     ))}
                   </div>
@@ -400,7 +398,7 @@ const Product = () => {
                       <div key={i} className="group cursor-pointer">
                         <div className="aspect-square bg-gray-100 rounded-lg mb-3 group-hover:shadow-md transition-shadow"></div>
                         <div className="font-semibold text-gray-900">Best Seller {i}</div>
-                        <div className="text-sm text-gray-600">Rwf{(253000 * i).toLocaleString()}</div>
+                        <div className="text-sm text-gray-600">RWF{(253000 * i).toLocaleString()}</div>
                       </div>
                     ))}
                   </div>
